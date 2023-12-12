@@ -5,7 +5,7 @@ import android.util.Log;
 
 public class Com implements ConnectTCP.ConnectTCPListener {
 
-    private ConnectTCP connectTCP;
+    private final ConnectTCP connectTCP;
 
     String TAG = "COMSSL";
 

@@ -2,28 +2,16 @@ package com.example.explorationsecurite;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -31,13 +19,13 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class ConnectTCP {
 
-    private static final String SERVER_IP = "192.168.16.36";
-    private static final int SERVER_PORT = 12344;
+    private static final String SERVER_IP = "192.168.16.161";
+    private static final int SERVER_PORT = 12346;
     private SSLSocket sslSocket;
     private ExecutorService readExecutorService;
     private ExecutorService writeExecutorService;
 
-    private Context context;
+    private final Context context;
 
     boolean reading;
 
@@ -67,9 +55,9 @@ public class ConnectTCP {
         readExecutorService.execute(() -> {
             try {
                 Resources resources = context.getResources();
-                InputStream inputStream = resources.openRawResource(R.raw.server);
+                InputStream certificateFile = resources.openRawResource(R.raw.server);
                 CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-                Certificate certificate = certificateFactory.generateCertificate(inputStream);
+                Certificate certificate = certificateFactory.generateCertificate(certificateFile);
 
                 KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 keyStore.load(null, null);
@@ -133,17 +121,15 @@ public class ConnectTCP {
         readExecutorService.execute(() -> {
             try {
                 InputStream inputStream = sslSocket.getInputStream();
-                byte[] buffer = new byte[1024]; // Taille du buffer à ajuster selon vos besoins
+                byte[] buffer = new byte[1024];
 
                 while (reading) {
                     int bytesRead = inputStream.read(buffer);
 
                     if (bytesRead == -1) {
-                        // La fin du flux a été atteinte, la connexion est fermée côté serveur
                         reading = false;
                         disconnect();
                     } else if (bytesRead > 0) {
-                        // Traitement des données lues dans le buffer
                         String message = new String(buffer, 0, bytesRead);
                         connectTCPListener.onRead(message);
                     }
