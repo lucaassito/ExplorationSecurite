@@ -13,10 +13,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class EncryptionUtils {
 
-    private static String ALGORITHM = "BlowFish";
-    private static String MODE = "BlowFish/CBC/PKCS5PADDING";
-    private static String IV = "abcdefgh";
-    private static String Key = "JAIMELEPATEEEEE";
+    private static String ALGORITHM = "AES";
+    private static String MODE = "AES/CBC/PKCS5PADDING";
+    private static String IV = "abcdefghabcdefgh";
+    private static String Key = "azertyuiopazerty";
 
 
     public static byte[] encrypt(byte[] message) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
@@ -24,7 +24,6 @@ public class EncryptionUtils {
         SecretKeySpec secretKeySpec = new SecretKeySpec(Key.getBytes(), ALGORITHM);
         Cipher cipher = Cipher.getInstance(MODE);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(IV.getBytes()));
-
         return cipher.doFinal(message);
     }
 

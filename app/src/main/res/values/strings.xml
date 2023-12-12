@@ -2,5 +2,7 @@
     <string name="app_name">Exploration Securite</string>
     <string name="EditTextHint">Message a encoder</string>
     <string name="EditTextHint2">Message a decoder</string>
-    <string name="ButtonText">Envoyer</string>
+    <string name="SendButtonText">Envoyer</string>
+    <string name="ConnectButtonText">Connexion</string>
+    <string name="ReadButtonText">lire</string>
 </resources>
